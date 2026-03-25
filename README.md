@@ -1,32 +1,36 @@
-# oficina-app
-Aplicação principal **Spring Boot** da oficina (Tech Challenge Fase 3 — SOAT), executada em **Kubernetes**.
+# oficina-infra-database
+Infraestrutura como código (**Terraform**) para **rede** e **base de dados gerenciada** (Tech Challenge Fase 3 — SOAT).
 ## Propósito
-- APIs administrativas (JWT **Keycloak** / `ROLE_ADMIN`).
-- APIs públicas (consulta de OS por `trackingCode`, aprovação de orçamento).
-- APIs de cliente com JWT emitido pela **Lambda** (`ROLE_CLIENTE`), quando configurado.
-- Ordem de serviço, catálogo, cadastros, métricas e notificações.
+- Provisionar **VPC**, subnets, **Internet Gateway** e roteamento.
+- Opcionalmente **RDS PostgreSQL** (laboratório/produção conforme variáveis).
+- Outputs para JDBC/secrets (consumo pela app e pela Lambda).
 ## Stack
-- Java 21, Spring Boot 3.x
-- PostgreSQL, Liquibase
-- Docker / Kubernetes
-- Observabilidade: Actuator, Prometheus (`/actuator/prometheus`), logs JSON (perfil `k8s`)
+- Terraform >= 1.5
+- Provider **AWS** (região configurável, ex.: `sa-east-1`)
+## Pré-requisitos
+- [Terraform](https://www.terraform.io/) instalado
+- Credenciais AWS (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` ou perfil IAM)
 ## Execução local
 ```bash
-docker compose up --build
+cd .
+cp terraform.tfvars.example terraform.tfvars
+# Editar terraform.tfvars
+terraform init
+terraform plan
+terraform apply
 ```
-- Swagger: `http://localhost:8080/api/swagger-ui/index.html`
-- Health: `http://localhost:8080/api/actuator/health`
-## Deploy
-- Imagem: `Dockerfile` + registry (ex.: GHCR).
-- Cluster: aplicar manifests em `/k8s` (outro repo ou mesmo processo, conforme decisão da equipa).
-- Variáveis: `DB_*`, `JWT_*`, `JWT_CPF_*` quando usar autenticação CPF.
+**Não commite** `terraform.tfstate` nem segredos. Para equipa, use backend remoto (S3 + lock).
+## CI
+- `terraform fmt -check`, `init -backend=false`, `validate` em PR.
+- `plan`/`apply` em workflow manual com secrets (não em cada push automático sem revisão).
 ## Diagrama (repositório)
 ```text
-[API Gateway] ---> [Ingress K8s] ---> [Spring Boot]
-                      /                    |
-            [Lambda / JWT CPF]          [PostgreSQL]
+[Internet] <-> [IGW] <-> [Subnets públicas]
+                              |
+                         [RDS PostgreSQL]
+                      (security group + VPC)
 ```
-## Documentação de API
-- **Swagger / OpenAPI:** `/api/swagger-ui` (com `context-path` `/api`).
+## Documentação
+- `README.md` detalhado e `docs/terraform-vs-enunciado.md` (se existirem na cópia a partir do monorepo).
 ## Convite
 Adicionar **`soat-architecture`** com leitura (portal SOAT).
