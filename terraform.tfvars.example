@@ -1,11 +1,11 @@
-# Copie para terraform.tfvars e ajuste.
-# aws_region   = "us-east-1"
-# project_name = "oficina"
-# environment  = "dev"
-# vpc_cidr     = "10.42.0.0/16"
-#
-# RDS PostgreSQL (opcional; gera custo na AWS)
-# enable_rds         = true
-# db_name            = "oficina"
-# db_username        = "oficina"
-# rds_instance_class = "db.t3.micro"
+# Copie para terraform.tfvars (arquivo ignorado pelo Git) e ajuste.
+aws_region   = "sa-east-1"
+project_name = "oficina"
+environment  = "dev"
+vpc_cidr     = "10.42.0.0/16"
+
+# RDS PostgreSQL — Fase 3 AWS (gera custo; db.t3.micro free tier se elegivel)
+enable_rds         = true
+db_name            = "oficina"
+db_username        = "oficina"
+rds_instance_class = "db.t3.micro"
