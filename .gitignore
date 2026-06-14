@@ -14,3 +14,4 @@ terraform.tfvars
 *.auto.tfvars
 .env
 .env.*
+tfplan
