@@ -74,7 +74,18 @@ terraform destroy
 
 A instância fica nas **subnets públicas** com `publicly_accessible = true` (cenário de laboratório; **não** é padrão de produção). O **Security Group** permite Postgres (5432) apenas a partir do **CIDR da VPC** (`vpc_cidr`).
 
-Após `apply` com RDS, use os outputs **`rds_jdbc_url`** e **`rds_master_password`** (sensíveis) para preencher o Secret Kubernetes (`DB_URL`, `DB_USER`, `DB_PASS`) - ver [`../k8s/README.md`](../k8s/README.md).
+Após `apply` com RDS, use os outputs **`rds_jdbc_url`** e **`rds_master_password`** (sensíveis) para o Secret Kubernetes no repo **oficina-app** (`k8s/aws/` ou `./scripts/fase3/deploy-aws-eks-app.sh`).
+
+### Ambiente de demonstracao Fase 3 (provisionado)
+
+| Item | Valor |
+|------|-------|
+| Regiao | `sa-east-1` |
+| Instancia | `oficina-dev-pg` |
+| Endpoint | `oficina-dev-pg.cdw04ewgopr2.sa-east-1.rds.amazonaws.com` |
+| Engine | PostgreSQL 16 |
+
+Liquibase aplicado; cliente demo CPF `52998224725` (status ATIVO). Lambda e EKS acessam o RDS via security groups na mesma VPC.
 
 ## Outputs
 
